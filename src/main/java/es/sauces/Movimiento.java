@@ -16,6 +16,11 @@ public class Movimiento {
         this.saldo = saldo;
     }
 
+    
+    /** 
+     * @return LocalDate
+     */
+    
     /* GETTERS */
     public LocalDate getFecha() {
         return fecha;

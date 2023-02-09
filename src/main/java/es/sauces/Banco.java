@@ -11,7 +11,11 @@ public class Banco {
         this.nombre = nombre;
         cuentas = new ArrayList<>();
     }
-
+    
+    /** 
+     * @return String
+     */
+    
     /* GETTERS */
     public String getNombre() {
         return nombre;
@@ -29,19 +33,52 @@ public class Banco {
     /* METODOS */
 
     public boolean abrirCuenta(String codigo, String titular, float saldo) {
-        return true;
+        boolean cuentaCreada=false;
+        Cuenta c;
+        c=new Cuenta(codigo, titular, saldo);
+
+        if (!cuentas.contains(c)) {
+            cuentas.add(c);
+            cuentaCreada=true;
+        }
+
+        return cuentaCreada;
     }    
 
     public boolean cancelarCuenta(String codigo) {
-        return true;
+        boolean cuentaCancelada=false;
+        int posicion;
+        posicion=buscarCuenta(codigo);
+
+        if (posicion>=0) {
+            cuentas.remove(posicion);
+            cuentaCancelada=true;
+        }
+
+        return cuentaCancelada;
     }
 
     public float getTotalDepositos() {
-        return 0;
+        float total;
+        total=0;
+
+        for (Cuenta c : cuentas) {
+            total+=c.getSaldo();
+        }
+
+        return total;
     }
 
     public Cuenta getCuenta(String codigo) {
-        return null;
+        Cuenta c=null;
+        int posicion;
+        posicion=buscarCuenta(codigo);
+        
+        if (posicion >= 0) {
+            c=cuentas.get(posicion);
+        }
+
+        return c;
     }
 
     @Override
@@ -51,7 +88,14 @@ public class Banco {
 
 
     private int buscarCuenta(String codigo) {
-        return -1;
+        int posicion=-1;
+        for (int i = 0; i < cuentas.size() && posicion==-1; i++) {
+            if (cuentas.get(i).getCodigo().equals(codigo)) {
+                posicion=i;
+            }
+        }
+
+        return posicion;
     }
     
     

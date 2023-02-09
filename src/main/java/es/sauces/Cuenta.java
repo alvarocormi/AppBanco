@@ -13,8 +13,11 @@ public class Cuenta {
     public Cuenta(String codigo, String titular, float saldo) {
         this.codigo = codigo;
         this.titular = titular;
-        this.saldo = saldo;
-        movimientos = new ArrayList<>(); 
+        if (saldo > 0) {
+            this.saldo = saldo;
+        }
+        movimientos = new ArrayList<>();
+        movimientos.add(new Movimiento(LocalDate.now(), 'I', this.saldo, this.saldo));
     }
 
     /* GETTER */
@@ -49,32 +52,53 @@ public class Cuenta {
     }
 
     public List<Movimiento> getMovimientos(LocalDate desde, LocalDate hasta) {
-        return movimientos;
+        List<Movimiento> listado=new ArrayList<>();
+
+        for (Movimiento m : movimientos) {
+            if (m.getFecha().isAfter(desde) && m.getFecha().isBefore(hasta)) {
+                listado.add(m);
+            }
+        }
+        return listado;
     }
 
     /* METODOS */
-
     public void ingresar(float cantidad) {
-
+        if (cantidad > 0) {
+            saldo += cantidad;
+            movimientos.add(new Movimiento(LocalDate.now(), 'I', cantidad, saldo));
+        }
     }
 
-    public void reintegrar(float reintegrar) {
+    public void reintegrar(float cantidad) {
+        if (cantidad > 0 && cantidad <= saldo) {
+            saldo -= cantidad;
+            movimientos.add(new Movimiento(LocalDate.now(), 'R', -cantidad, saldo));
 
+        }
     }
 
     public void realizarTransferencia(Cuenta destino, float cantidad) {
-
+        if (destino != null && this.equals(destino) && cantidad > 0 && cantidad <= saldo) {
+            saldo -= cantidad;
+            movimientos.add(new Movimiento(LocalDate.now(), 'T', -cantidad, saldo));
+            destino.saldo += cantidad;
+            destino.movimientos.add(new Movimiento(LocalDate.now(), 'I', cantidad, destino.saldo));
+        }
     }
 
     public String listarMovimientos() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        for (Movimiento m : movimientos) {
+            sb.append(m);
+        }
+        return sb.toString();
     }
 
     @Override
     public String toString() {
-        return codigo + ","+ titular + "," + saldo;
+        return codigo + "," + titular + "," + saldo;
     }
-
 
     @Override
     public int hashCode() {
