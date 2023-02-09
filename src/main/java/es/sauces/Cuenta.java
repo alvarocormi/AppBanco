@@ -90,7 +90,7 @@ public class Cuenta {
     public String listarMovimientos() {
         StringBuilder sb = new StringBuilder();
         for (Movimiento m : movimientos) {
-            sb.append(m);
+            sb.append(m.toString()).append("\n");
         }
         return sb.toString();
     }
