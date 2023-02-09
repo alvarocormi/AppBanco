@@ -2,14 +2,15 @@ package es.sauces;
 
 import java.util.*;
 
+
 public class Banco {
     private String nombre;
-    private Set<Cuenta> cuentas;
+    private Map<String, Cuenta> cuentas;
 
     /* CONSTRUCTOR */
     public Banco(String nombre) {
         this.nombre = nombre;
-        cuentas = new TreeSet<>();
+        cuentas = new HashMap<>();
     }
 
     /**
@@ -21,8 +22,8 @@ public class Banco {
         return nombre;
     }
 
-    public Set<Cuenta> getCuentas() {
-        return cuentas;
+    public List<Cuenta> getCuentas() {
+        return new ArrayList<>(cuentas.values());
     }
 
     /* SETTERS */
@@ -33,42 +34,27 @@ public class Banco {
     /* METODOS */
 
     public boolean abrirCuenta(String codigo, String titular, float saldo) {
-        return cuentas.add(new Cuenta(codigo, titular, saldo));
+        return cuentas.putIfAbsent(codigo, new Cuenta(codigo, titular, saldo)) == null;
     }
 
     public boolean cancelarCuenta(String codigo) {
-        boolean cuentaCancelada=false;
-        Cuenta c;
+        return  cuentas.remove(codigo) != null;
 
-        c=getCuenta(codigo);
-        if (c!=null) {
-            cuentaCancelada=cuentas.remove(c);
-        }
-        
-        return cuentaCancelada;
-        
     }
 
     public float getTotalDepositos() {
-        float total;
-        total = 0;
+       float total;
+       total =0; 
 
-        for (Cuenta c : cuentas) {
-            total += c.getSaldo();
-        }
+       for (Cuenta c:cuentas.values()) {
+            total+=c.getSaldo();
+       }
 
         return total;
     }
 
     public Cuenta getCuenta(String codigo) {
-
-        for (Cuenta c : cuentas) {
-            if (c.getCodigo().equals(codigo)) {
-                return c;
-            }
-        }
-
-        return null;
+        return cuentas.get(codigo);
     }
 
     @Override
