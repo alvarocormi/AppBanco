@@ -4,24 +4,24 @@ import java.util.*;
 
 public class Banco {
     private String nombre;
-    private List<Cuenta> cuentas;
+    private Set<Cuenta> cuentas;
 
     /* CONSTRUCTOR */
     public Banco(String nombre) {
         this.nombre = nombre;
-        cuentas = new LinkedList<>();
+        cuentas = new HashSet<>();
     }
-    
-    /** 
+
+    /**
      * @return String
      */
-    
+
     /* GETTERS */
     public String getNombre() {
         return nombre;
     }
 
-    public List<Cuenta> getCuentas() {
+    public Set<Cuenta> getCuentas() {
         return cuentas;
     }
 
@@ -33,52 +33,42 @@ public class Banco {
     /* METODOS */
 
     public boolean abrirCuenta(String codigo, String titular, float saldo) {
-        boolean cuentaCreada=false;
-        Cuenta c;
-        c=new Cuenta(codigo, titular, saldo);
-
-        if (!cuentas.contains(c)) {
-            cuentas.add(c);
-            cuentaCreada=true;
-        }
-
-        return cuentaCreada;
-    }    
+        return cuentas.add(new Cuenta(codigo, titular, saldo));
+    }
 
     public boolean cancelarCuenta(String codigo) {
         boolean cuentaCancelada=false;
-        int posicion;
-        posicion=buscarCuenta(codigo);
+        Cuenta c;
 
-        if (posicion>=0) {
-            cuentas.remove(posicion);
-            cuentaCancelada=true;
+        c=getCuenta(codigo);
+        if (c!=null) {
+            cuentaCancelada=cuentas.remove(c);
         }
-
+        
         return cuentaCancelada;
+        
     }
 
     public float getTotalDepositos() {
         float total;
-        total=0;
+        total = 0;
 
         for (Cuenta c : cuentas) {
-            total+=c.getSaldo();
+            total += c.getSaldo();
         }
 
         return total;
     }
 
     public Cuenta getCuenta(String codigo) {
-        Cuenta c=null;
-        int posicion;
-        posicion=buscarCuenta(codigo);
-        
-        if (posicion >= 0) {
-            c=cuentas.get(posicion);
+
+        for (Cuenta c : cuentas) {
+            if (c.getCodigo().equals(codigo)) {
+                return c;
+            }
         }
 
-        return c;
+        return null;
     }
 
     @Override
@@ -86,17 +76,4 @@ public class Banco {
         return nombre;
     }
 
-
-    private int buscarCuenta(String codigo) {
-        int posicion=-1;
-        for (int i = 0; i < cuentas.size() && posicion==-1; i++) {
-            if (cuentas.get(i).getCodigo().equals(codigo)) {
-                posicion=i;
-            }
-        }
-
-        return posicion;
-    }
-    
-    
 }
