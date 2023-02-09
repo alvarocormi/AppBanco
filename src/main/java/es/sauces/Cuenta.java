@@ -3,7 +3,7 @@ package es.sauces;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Cuenta {
+public class Cuenta implements Comparable<Cuenta> {
     private String codigo;
     private String titular;
     private float saldo;
@@ -79,7 +79,7 @@ public class Cuenta {
     }
 
     public void realizarTransferencia(Cuenta destino, float cantidad) {
-        if (destino != null && this.equals(destino) && cantidad > 0 && cantidad <= saldo) {
+        if (destino != null && cantidad > 0 && cantidad <= saldo) {
             saldo -= cantidad;
             movimientos.add(new Movimiento(LocalDate.now(), 'T', -cantidad, saldo));
             destino.saldo += cantidad;
@@ -123,5 +123,10 @@ public class Cuenta {
         } else if (!codigo.equals(other.codigo))
             return false;
         return true;
+    }
+
+    @Override
+    public int compareTo(Cuenta o) {
+        return this.codigo.compareTo(o.codigo);
     }
 }

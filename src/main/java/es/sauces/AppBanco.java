@@ -86,6 +86,7 @@ public class AppBanco {
                                     cantidad = teclado.nextFloat();
                                     cuenta.realizarTransferencia(cuentaDestino, cantidad);
                                     System.out.println("Su transferencia ha sido realizada con exito");
+                                    System.out.println("Su saldo actual es: "+cuenta.getSaldo());
                                 } else {
                                     System.out.println("Esa cuenta no existe");
                                 }

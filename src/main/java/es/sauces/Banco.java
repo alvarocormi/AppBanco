@@ -9,7 +9,7 @@ public class Banco {
     /* CONSTRUCTOR */
     public Banco(String nombre) {
         this.nombre = nombre;
-        cuentas = new HashSet<>();
+        cuentas = new TreeSet<>();
     }
 
     /**
